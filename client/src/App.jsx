@@ -58,16 +58,13 @@ function App() {
         }}
       >
         <Typography variant="h5" gutterBottom>
-          Contact Form
+          Add Contact
         </Typography>
         <ContactForm onSave={handleSave} editingContact={editingContact} />
       </Box>
 
       
       <Box sx={{ flex: 2, padding: 2 }}>
-        <Typography variant="h5" gutterBottom>
-          Contact List
-        </Typography>
         <ContactTable contacts={contacts} onEdit={handleEdit} onDelete={handleDelete}/>
       </Box>
     </Box>
