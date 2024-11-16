@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -10,16 +11,28 @@ function App() {
   const [contacts, setContacts] = useState([]);
   const [editingContact, setEditingContact] = useState(null);
 
+  useEffect(()=>{
+    axios.get('http://localhost:5000/api/contacts').then(response => {
+      setContacts(response.data);
+    }).catch(err => {
+      console.error('Error fetching contacts:', err);
+    });
+  }, []);
+
   const handleSave = (contact) => {
     if (editingContact) {
-      setContacts((prev)=>
-        prev.map((c)=>
-        (c.id===editingContact.id?{...contact, id: c.id } : c)
-        )
-      );
-      setEditingContact(null);
+      axios.put(`http://localhost:5000/api/contacts/${editingContact.id}`, contact).then(response => {
+        setContacts(prev => prev.map(c=>(c.id===editingContact.id?response.data:c)));
+        setEditingContact(null);
+      }).catch(err =>{
+          console.error('Error updating contact:', err);
+      });
     } else {
-      setContacts((prev)=>[...prev, {...contact, id:Date.now()}]);
+      axios.post('http://localhost:5000/api/contacts', contact).then(response=>{
+        setContacts(prev=>[...prev, response.data]);
+      }).catch(err=>{
+        console.error('Error creating contact:', err);
+      });
     }
   };
 
@@ -28,7 +41,11 @@ function App() {
   };
 
   const handleDelete=(id)=>{
-    setContacts((prev)=>prev.filter((contact)=>contact.id!==id));
+    axios.delete(`http://localhost:5000/api/contacts/${id}`).then(()=>{
+      setContacts(prev=>prev.filter(contact=>contact.id!==id));
+    }).catch(err=>{
+      console.error('Error deleting contact:', err);
+    })
   }
 
   return (
@@ -37,14 +54,13 @@ function App() {
         sx={{
           flex: 1,
           padding: 4,
-          backgroundColor: '#f5f5f5',
           borderRight: '1px solid #ddd',
         }}
       >
         <Typography variant="h5" gutterBottom>
           Contact Form
         </Typography>
-        <ContactForm onSave={handleSave}/>
+        <ContactForm onSave={handleSave} editingContact={editingContact} />
       </Box>
 
       

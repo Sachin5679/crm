@@ -1,5 +1,7 @@
 import React from 'react';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ContactTable = ({ contacts, onEdit, onDelete }) => {
   return (
@@ -20,16 +22,28 @@ const ContactTable = ({ contacts, onEdit, onDelete }) => {
             <TableBody>
                 {contacts.map((contact) => (
                 <TableRow key={contact.id}>
-                <TableCell>{contact.firstName}</TableCell>
-                <TableCell>{contact.lastName}</TableCell>
-                <TableCell>{contact.email}</TableCell>
-                <TableCell>{contact.phoneNumber}</TableCell>
-                <TableCell>{contact.company}</TableCell>
-                <TableCell>{contact.jobTitle}</TableCell>
-                <TableCell>
-                    <Button variant="outlined" onClick={() => onEdit(contact)}>Edit</Button>
-                    <Button variant="outlined" color="error" onClick={() => onDelete(contact.id)}>Delete</Button>
-                </TableCell>
+                    <TableCell>{contact.firstName}</TableCell>
+                    <TableCell>{contact.lastName}</TableCell>
+                    <TableCell>{contact.email}</TableCell>
+                    <TableCell>{contact.phoneNumber}</TableCell>
+                    <TableCell>{contact.company}</TableCell>
+                    <TableCell>{contact.jobTitle}</TableCell>
+                    <TableCell>
+                    <IconButton
+                        color="primary"
+                        onClick={() => onEdit(contact)}
+                        aria-label="edit"
+                    >
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton
+                        color="error"
+                        onClick={() => onDelete(contact.id)}
+                        aria-label="delete"
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                    </TableCell>
                 </TableRow>
             ))}
             </TableBody>
@@ -39,4 +53,4 @@ const ContactTable = ({ contacts, onEdit, onDelete }) => {
   )
 }
 
-export default ContactTable
+export default ContactTable;
